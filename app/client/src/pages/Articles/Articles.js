@@ -1,19 +1,20 @@
 import React, { Component } from "react";
 import Jumbotron from "../../components/Jumbotron";
-import API from "../../utils/API";
+// import API from "../../utils/API";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../../components/Grid";
 import { List, ListItem } from "../../components/List";
 import { Input, FormBtn } from "../../components/Form";
 import "./Articles.css";
+import axios from "axios";
 
 class Articles extends Component {
     state = {
         articles : [],
-        title : "",
-        date : "",
-        url : "",
-        search : "",
+        // title : "",
+        // date : "",
+        // url : "",
+        topic : "",
         startYear : "",
         endYear : ""
 
@@ -39,27 +40,30 @@ class Articles extends Component {
     // };
 
     handleInputChange = event => {
+        const { name, value } = event.target;
         this.setState({
-            search : event.target.value
+            [name]: value
         });
     };
 
     handleFormSubmit = event => {
         event.preventDefault();
         if (this.state.topic && this.state.startYear && this.state.endYear) {
-            API.articleSearch(this.state.search, this.state.startYear, this.state.endYear)
-                .then(res => {
-                    if (res.data.status === "error") {
-                        throw new Error(res.data.message);
-                    }
-                    this.setState({ 
-                        results : res.data.message, error : "" 
-                    });
-                    console.log(res.data);
-                })
-                .catch(err => this.setState({
-                    error : err.message
-                }));
+            axios.get("https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=b9f91d369ff59547cd47b931d8cbc56b:0:74623931&q=" + this.state.topic + "&begin_date=" + this.state.startYear + "0101&end_date=" + this.state.endYear + "0101").then(res => {
+                this.setState({articles:res.data.response.docs})
+            });
+            // API.articleSearch(this.state.topic, this.state.startYear, this.state.endYear)
+            //     .then(res => {
+            //         if (res.data.status === "error") {
+            //             throw new Error(res.data.message);
+            //         }
+            //         this.setState({ 
+            //             articles : res.data.message, error : "" 
+            //         });
+            //     })
+            //     .catch(err => this.setState({
+            //         error : err.message
+            //     }));
         };
     };
 
@@ -71,17 +75,19 @@ class Articles extends Component {
                         <Jumbotron id = "search-jumbotron">
                             <h3>Search NYT Articles</h3>
                             <form>
-                                <Input 
+                                <Input value={this.state.topic}
                                     onChange={this.handleInputChange}
                                     name="topic"
                                     placeholder="Topic (required)"
                                 />
                                 <Input
+                                    value={this.state.startYear}
                                     onChange={this.handleInputChange}
                                     name="startYear"
                                     placeholder="Start Year (required)"
                                 />
                                 <Input 
+                                    value={this.state.endYear}
                                     onChange={this.handleInputChange}
                                     name="endYear"
                                     placeholder="End Year (required)"
@@ -103,10 +109,12 @@ class Articles extends Component {
                                     <ListItem key={article._id}>
                                         <Link to={"/articles/" + article._id}>
                                             <strong>
-                                                {article.title}
-                                                {article.date}
-                                                {article.url}
+                                                {"'" + article.headline.main + "' "}
                                             </strong>
+                                                {article.byline.original + " "}
+                                                {/* {article.pub_date} */}
+                                                {/* {article.} */}
+                                            
                                         </Link> 
                                     </ListItem>   
                                 ))}

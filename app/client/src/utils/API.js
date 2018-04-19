@@ -13,5 +13,8 @@ const endDate = "&end_date=" + "2018" + "0101";
 export default {
     articleSearch: function(query, startDate, endDate) {
         return axios.get(BASEURL + APIKey + query + startDate + endDate);
-    }
+    },
+    // {
+    // // save article    
+    // }
 };
