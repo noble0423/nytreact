@@ -1,0 +1,10 @@
+#search-jumbotron {
+    height: 285px;
+    padding-top: 30px;
+}
+
+#results-jumbotron {
+    height: 285px;
+    padding-top: 30px;
+    overflow: auto;
+}

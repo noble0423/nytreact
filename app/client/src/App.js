@@ -1,21 +1,26 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import './App.css';
+import Articles from "./pages/Articles";
+import Nav from "./components/Nav";
+import Jumbotron from "./components/Jumbotron";
+import Footer from "./components/Footer";
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+
+const App = () => (
+      <Router>
+        <div>
+          <Nav />
+          <Jumbotron>
+            <h1>New York Times Article Search</h1>
+            <h5>Search for and annotate articles of interest.</h5>
+          </Jumbotron>
+          <Switch>
+            <Route exact path = "/" component = {Articles} />
+          </Switch>
+          <Footer/>
+        </div>
+      </Router>
     );
-  }
-}
 
 export default App;
