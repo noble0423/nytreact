@@ -12,7 +12,11 @@ class Articles extends Component {
         articles : [],
         title : "",
         date : "",
-        url : ""
+        url : "",
+        search : "",
+        startYear : "",
+        endYear : ""
+
     };
 
     // componentDidMount() {
@@ -27,17 +31,37 @@ class Articles extends Component {
     //         .catch(err => console.log(err));
     // };
 
+    // handleInputChange = event => {
+    //     const { name, value } = event.target;
+    //     this.setState({
+    //         [name] : value
+    //     });
+    // };
+
     handleInputChange = event => {
-        const { name, value } = event.target;
         this.setState({
-            [name] : value
+            search : event.target.value
         });
     };
 
-    // handleFormSubmit = event => {
-    //     event.preventDefault();
-
-    // }
+    handleFormSubmit = event => {
+        event.preventDefault();
+        if (this.state.topic && this.state.startYear && this.state.endYear) {
+            API.articleSearch(this.state.search, this.state.startYear, this.state.endYear)
+                .then(res => {
+                    if (res.data.status === "error") {
+                        throw new Error(res.data.message);
+                    }
+                    this.setState({ 
+                        results : res.data.message, error : "" 
+                    });
+                    console.log(res.data);
+                })
+                .catch(err => this.setState({
+                    error : err.message
+                }));
+        };
+    };
 
     render() {
         return (
@@ -54,12 +78,12 @@ class Articles extends Component {
                                 />
                                 <Input
                                     onChange={this.handleInputChange}
-                                    name="start-year"
+                                    name="startYear"
                                     placeholder="Start Year (required)"
                                 />
                                 <Input 
                                     onChange={this.handleInputChange}
-                                    name="end-year"
+                                    name="endYear"
                                     placeholder="End Year (required)"
                                 />
                                 <FormBtn

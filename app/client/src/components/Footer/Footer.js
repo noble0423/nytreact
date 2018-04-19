@@ -1,8 +1,8 @@
 import React from "react";
 
 const Footer = () => (
-    <footer class="page-footer z-depth-5 bg-primary" id="footer">
-        <div class="container center">
+    <footer className="page-footer z-depth-5 bg-primary" id="footer">
+        <div className="container center">
             <h6>© 2018 Copyright | nytReact | Ryan Noble</h6>
         </div>
     </footer>
