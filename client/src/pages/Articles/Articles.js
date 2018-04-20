@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Jumbotron from "../../components/Jumbotron";
-// import API from "../../utils/API";
+import API from "../../utils/API";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../../components/Grid";
 import { List, ListItem } from "../../components/List";
@@ -11,9 +11,10 @@ import axios from "axios";
 class Articles extends Component {
     state = {
         articles : [],
-        // title : "",
-        // date : "",
-        // url : "",
+        title : "",
+        author: "",
+        date : "",
+        url : "",
         topic : "",
         startYear : "",
         endYear : ""
@@ -22,22 +23,24 @@ class Articles extends Component {
 
     // componentDidMount() {
     //     this.loadArticles();
-    // }
-
-    // loadArticles = () => {
-    //     API.getArticles()
-    //         .then(res => 
-    //             this.setState({ articles : res.data, title : "", date : "", url : "" })
-    //         )
-    //         .catch(err => console.log(err));
+    //     // API.getArticles(this.props.match.params.id)
+    //     //     .then(res => this.setState({ article : res.data }))
+    //     //     .catch(err => console.lof(err));
     // };
 
-    // handleInputChange = event => {
-    //     const { name, value } = event.target;
-    //     this.setState({
-    //         [name] : value
-    //     });
-    // };
+    loadArticles = () => {
+        API.getArticles()
+            .then(res => 
+                this.setState({ articles : res.data, title : "", author : "", date : "", url : "" })
+            )
+            .catch(err => console.log(err));
+    };
+
+    deleteArticle = id => {
+        API.deleteArticle(id)
+            .then(res => this.loadArticles())
+            .catch(err => console.log(err));
+    };
 
     handleInputChange = event => {
         const { name, value } = event.target;
@@ -52,19 +55,20 @@ class Articles extends Component {
             axios.get("https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=b9f91d369ff59547cd47b931d8cbc56b:0:74623931&q=" + this.state.topic + "&begin_date=" + this.state.startYear + "0101&end_date=" + this.state.endYear + "0101").then(res => {
                 this.setState({articles:res.data.response.docs})
             });
-            // API.articleSearch(this.state.topic, this.state.startYear, this.state.endYear)
-            //     .then(res => {
-            //         if (res.data.status === "error") {
-            //             throw new Error(res.data.message);
-            //         }
-            //         this.setState({ 
-            //             articles : res.data.message, error : "" 
-            //         });
-            //     })
-            //     .catch(err => this.setState({
-            //         error : err.message
-            //     }));
         };
+    };
+
+    handleSaveButton = event => {
+        event.preventDefault();
+        console.log("clicked ");
+        API.saveArticle({
+            title : this.state.title,
+            author : this.state.author,
+            date : this.state.date,
+            url : this.state.url
+        })
+        .then(res => this.loadArticles())
+        .catch(err => console.log(err));
     };
 
     render() {
@@ -93,7 +97,7 @@ class Articles extends Component {
                                     placeholder="End Year (required)"
                                 />
                                 <FormBtn
-                                    // disabled={!(this.state.topic)}
+                                    disabled={!(this.state.topic && this.state.startYear && this.state.endYear)}
                                     onClick={this.handleFormSubmit}
                                 >
                                     Search
@@ -113,8 +117,8 @@ class Articles extends Component {
                                             </strong>
                                                 {article.byline.original + " "}
                                                 {article.pub_date}
-                                                {/* {article.} */}
-
+                                                {/* {article.web_url} */}
+                                            <button onClick={this.handleSaveButton}  type="button" className="btn btn-info btn-sm" id="save-btn">Save</button>
                                         </Link> 
                                     </ListItem>   
                                 ))}
@@ -126,8 +130,19 @@ class Articles extends Component {
                     <Col size = "md-2">
                     </Col>
                     <Col size = "md-8" >
-                        <Jumbotron>
+                        <Jumbotron id = "saved-jumbotron">
                             <h3>Saved Articles</h3>
+                            <List>
+                                {this.state.articles.map(article => (
+                                    <ListItem key={article._id}>
+                                        <Link to={"/articles/" + article._id}>
+                                            <strong>
+                                                {article.title}
+                                            </strong>
+                                        </Link>
+                                    </ListItem>
+                                ))}
+                            </List>
                         </Jumbotron>        
                     </Col>
                 </Row>

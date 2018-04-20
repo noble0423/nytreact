@@ -8,3 +8,18 @@
     padding-top: 30px;
     overflow: auto;
 }
+
+#save-btn {
+    position: absolute;
+    right: 15px;
+}
+
+#search-btn {
+    background-color: #EB6864;
+}
+
+#saved-jumbotron {
+    height: 285px;
+    padding-top: 30px;
+    overflow: auto;
+}

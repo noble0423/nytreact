@@ -7,6 +7,9 @@ const articleSchema = new Schema({
         unique : true,
         required : true
     },
+    author : {
+        type : String,
+    },
     date : {
         type : Date,
         required : true
