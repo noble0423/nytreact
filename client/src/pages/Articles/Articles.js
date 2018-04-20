@@ -58,14 +58,14 @@ class Articles extends Component {
         };
     };
 
-    handleSaveButton = event => {
-        event.preventDefault();
-        console.log("clicked ");
+    handleSaveButton = article => {
+        // event.preventDefault();
+        console.log("clicked ", article);
         API.saveArticle({
-            title : this.state.title,
-            author : this.state.author,
-            date : this.state.date,
-            url : this.state.url
+            title : article.headline.main,
+            author : article.byline.original,
+            date : article.pub_date,
+            url : article.web_url
         })
         .then(res => this.loadArticles())
         .catch(err => console.log(err));
@@ -118,7 +118,7 @@ class Articles extends Component {
                                                 {article.byline.original + " "}
                                                 {article.pub_date}
                                                 {/* {article.web_url} */}
-                                            <button onClick={this.handleSaveButton}  type="button" className="btn btn-info btn-sm" id="save-btn">Save</button>
+                                            <button onClick={() => this.handleSaveButton(article)} type="button" className="btn btn-info btn-sm" id="save-btn">Save</button>
                                         </Link> 
                                     </ListItem>   
                                 ))}
