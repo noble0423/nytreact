@@ -112,9 +112,9 @@ class Articles extends Component {
                                                 {"'" + article.headline.main + "' "}
                                             </strong>
                                                 {article.byline.original + " "}
-                                                {/* {article.pub_date} */}
+                                                {article.pub_date}
                                                 {/* {article.} */}
-                                            
+
                                         </Link> 
                                     </ListItem>   
                                 ))}
